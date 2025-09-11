@@ -36,7 +36,6 @@ void afficherjoueurs();
 void modifierjoueur();
 void supprimerjoueur();
 void chercherjoueur();
-void tri_par_nom();
 void statistique();
 int main() {
     srand(time(NULL));
@@ -80,6 +79,7 @@ void ajouterjoueur() {
     }
 
     int n;
+
     printf("Combien de joueurs voulez-vous ajouter: ");
     scanf("%d", &n);
     while(getchar() != '\n'); // flush newline
@@ -109,7 +109,6 @@ void ajouterjoueur() {
 
         printf("Taper l'age du joueur: ");
         scanf("%d", &nouvau_joueur.age);
-
         int maillot_valide = 0;
         while (!maillot_valide) {
             printf("Taper le numero du maillot: ");
@@ -188,6 +187,49 @@ void tri_par_age() {
     }
 }
 
+void afficherjoueursparposte() {
+    char postecherche[50];
+    int trouve = 0;
+
+    printf("Taper le poste du joueur (gardien, defenseur, milieu, attaquant): ");
+    fgets(postecherche, sizeof(postecherche), stdin);
+    postecherche[strcspn(postecherche, "\n")] = 0;
+
+    printf("\n--- Joueurs au poste %s ---\n", postecherche);
+    for (int i = 0; i < conteurjoueurs; i++) {
+        if (strcasecmp(joueurs[i].poste, postecherche) == 0) {
+            printf("ID: %s | Nom: %s | Prenom: %s | Age: %d | Maillot: %d | Poste: %s | Buts: %d\n",
+                   joueurs[i].id,
+                   joueurs[i].nom,
+                   joueurs[i].prenom,
+                   joueurs[i].age,
+                   joueurs[i].maillot,
+                   joueurs[i].poste,
+                   joueurs[i].but);
+            trouve = 1;
+        }
+    }
+
+    if (!trouve) {
+        printf("Aucun joueur trouvé pour ce poste.\n");
+    }
+}
+
+void afficherjoueurnormale(){
+            printf("\n--- Liste des joueurs ---\n");
+           for (int i = 0; i < conteurjoueurs; i++) {
+
+             printf("ID: %s | Nom: %s | Prenom: %s | Age: %d | Maillot: %d | Poste: %s | Buts: %d\n",
+               joueurs[i].id,
+               joueurs[i].nom,
+               joueurs[i].prenom,
+               joueurs[i].age,
+               joueurs[i].maillot,
+               joueurs[i].poste,
+               joueurs[i].but);
+
+}}
+
 void afficherjoueurs() {
     int choix;
     if (conteurjoueurs == 0) {
@@ -199,24 +241,16 @@ void afficherjoueurs() {
     printf("(2)tri par nom\n");
     printf("(3)tri par age\n");
     printf("(4)afficher les joueur par poste\n");
-        scanf("%d",&choix);
+    scanf("%d",&choix);
+    getchar();
+
 
      switch(choix){
-        case 1:    
-         printf("\n--- Liste des joueurs ---\n");
-           for (int i = 0; i < conteurjoueurs; i++) {
-             printf("ID: %s | Nom: %s | Prenom: %s | Age: %d | Maillot: %d | Poste: %s | Buts: %d\n",
-               joueurs[i].id,
-               joueurs[i].nom,
-               joueurs[i].prenom,
-               joueurs[i].age,
-               joueurs[i].maillot,
-               joueurs[i].poste,
-               joueurs[i].but);
-    } ;break;
+        case 1: afficherjoueurnormale();   
+break;
         case 2:tri_par_nom() ;break;
         case 3: tri_par_age();break;
-        case 4: break;
+        case 4: afficherjoueursparposte();break;
      }
 
 
@@ -302,13 +336,13 @@ void chercherjoueur(){
     switch (choix)
     {
     case 1:
-    afficherjoueurs();
-        printf("taper le nom du jouer: ");
+    afficherjoueurnormale();
+        printf("taper le nom du jouer: \n");
         fgets(nomchercher,50,stdin);
         nomchercher[strcspn(nomchercher,"\n")]='\0';
         for(i=0;i<conteurjoueurs;i++){
            if(strcasecmp(joueurs[i].nom,nomchercher)==0){
-                        printf("ID: %s | Nom: %s | Prenom: %s | Age: %d | Maillot: %d | Poste: %s | Buts: %d\n",
+                 printf("ID: %s | Nom: %s | Prenom: %s | Age: %d | Maillot: %d | Poste: %s | Buts: %d\n",
                joueurs[i].id,
                joueurs[i].nom,
                joueurs[i].prenom,
@@ -323,11 +357,11 @@ void chercherjoueur(){
 
         }
         if(valide==0){
-                 printf("aucun joueur avec ce nom trouvee");
+                 printf("aucun joueur avec ce nom trouvee\n");
         }
         break;
     case 2:
-    afficherjoueurs();
+    afficherjoueurnormale();
         printf("taper ID du jouer: ");
         fgets(idchercher,10,stdin);
         idchercher[strcspn(idchercher,"\n")]='\0';
@@ -370,8 +404,10 @@ void afficheragemoyenne(){
 }
 void afficherjoueursmarqueplusdex(){
     int x, i, trouve = 0;
-    printf("Taper nombre de buts pour afficher les joueurs ayant marque plus de X buts: ");
+    printf("Taper nombre de buts : ");
     scanf("%d", &x);
+    getchar();
+    printf("les joueurs ayant marque plus de %d buts: \n",x);
 
     for(i = 0; i < conteurjoueurs; i++){
         if(joueurs[i].but >= x){
@@ -387,7 +423,7 @@ void afficherjoueursmarqueplusdex(){
         }
     }
     if(!trouve){
-        printf("Aucun joueur n'a marque plus de %d buts.\n", x);
+        printf("------>Aucun joueur n'a marque plus de %d buts.\n", x);
     }
 }
 void affichermeilleurbutteur(){
@@ -416,9 +452,11 @@ void afficherjoueur_jeune_ou_agee(){
     int jeune=joueurs[0].age;
     int agee=joueurs[0].age;
     int i,choix;
+   do{
     printf("taper votre choix\n");
     printf("(1) le joueur le plus jeune\n");
     printf("(2) le joueur le plus agee\n");
+    printf("(3) quiter\n");
     scanf("%d",&choix);
 
     switch(choix){
@@ -470,20 +508,29 @@ void afficherjoueur_jeune_ou_agee(){
         printf("choix invalide");
 
 
-}}
+}
+
+   }while(choix!=3);
+   return ;
+}
 void statistique(){
     int choix;
-      printf("------statistique------\n");
-      printf("(1) afficher le nombre total des joueur dans l'equipe\n");
-      printf("(2) afficher l'age moyenne des joueur\n");
-      printf("(3) Afficher les joueurs ayant marqué plus de X buts\n");
-      printf("(4) afficher le meilleur butteur\n");
-      printf("(5) afficher le joueur plus jeune et plus age\n");
-      printf("taper votre choix\n");
+      do{
+      printf("----------------------statistique--------------------|\n");
+      printf("                                                     |\n");
+      printf("(1) afficher le nombre total des joueur dans l'equipe|\n");
+      printf("(2) afficher l'age moyenne des joueur                |\n");
+      printf("(3) Afficher les joueurs ayant marqué plus de X buts |\n");
+      printf("(4) afficher le meilleur butteur                     |\n");
+      printf("(5) afficher le joueur plus jeune et plus age        |\n");
+      printf("(6) quiter                                           |\n");
+      printf("(6)--------------------------------------------------|\n");
+      printf("taper votre choix: ");
       scanf("%d",&choix);
+
       switch(choix){
         case 1:
-          printf(" le nombre totale des joueur dans l'equipe: %d \n",conteurjoueurs);
+          printf(" le nombre totale des joueur dans l'equipe: %d",conteurjoueurs);
           break;
         case 2:
           afficheragemoyenne();
@@ -497,6 +544,11 @@ void statistique(){
         case 5:
         afficherjoueur_jeune_ou_agee();
         break;
+        default:
+        printf("choix invalide");break;
       }
+
+      }while(choix!=6);
+      return ;
 
 }
